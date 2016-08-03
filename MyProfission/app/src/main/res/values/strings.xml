@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Buskr</string>
+    <string name="action_atualizar">Atualizar</string>
+    <string name="title">Contatos</string>
+    <string name="abrir_contatos">Abrir Contatos</string>
+    <string name="query">Via Query</string>
+    <string name="nome">Nome:</string>
+    <string name="telefone">Telefone:</string>
+    <string name="email">Email:</string>
+    <string name="mensagem_instatanea">Mensagem instatânea:</string>
+    <string name="organizacao">Organização:</string>
+    <string name="endereco">Endereco:</string>
+    <string name="notas">Notas:</string>
+    <string name="err_msg_name">Campo não pode ser vazio</string>
+    <string name="err_msg_email">Email invalido</string>
+
+</resources>

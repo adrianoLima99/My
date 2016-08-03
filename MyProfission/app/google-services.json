@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "73601945221",
+    "firebase_url": "https://chatbusk.firebaseio.com",
+    "project_id": "chatbusk",
+    "storage_bucket": "chatbusk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73601945221:android:8fda5967fc8e00e4",
+        "android_client_info": {
+          "package_name": "com.br.myprofission"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73601945221-k9s73jkiu8526ib9qhes742alpfonn9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0NaDXbdGGgRgr6SbIIXZ2v33RPFE3eA4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
