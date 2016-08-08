@@ -237,5 +237,15 @@ public class Utilitaria {
 
         return dist * 1000; //em metros
     }
+public static String nomeSala(String emissor,String receptador){
+    String  sala=null;
+    String[] s=null;
 
+    s = emissor.split("@");
+    sala=s[0];
+    s=receptador.split("@");
+    sala+=s[0];
+
+    return sala;
+}
 }

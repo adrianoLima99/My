@@ -38,6 +38,8 @@ import com.br.myprofission.fragment.FragmentConversa;
 import com.br.myprofission.fragment.FragmentPerfil;
 import com.br.myprofission.fragment.FragmentInicio;
 import com.br.myprofission.util.Utilitaria;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +67,20 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+      /*  new Thread(new Runnable() {
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                    }
+                });
+                FirebaseInstanceIDService t = new FirebaseInstanceIDService();
+                t.onTokenRefresh();
+
+            }
+        }).start();*/
+
 
         bd_user = new BDUsuario(this);
 

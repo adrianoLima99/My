@@ -3,17 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="3dp">
-
-    <!--<TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.br.myprofission.util.CircularNetworkImageView
+            android:id="@+id/image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/usuario"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
         android:id="@+id/txt_nome"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vazio"/>-->
-    <TextView
-        android:id="@+id/txt_nome_exibicao"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Vazio"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"/>
+        android:text="Vazio"/>
+        <TextView
+            android:id="@+id/txt_nome_exibicao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vazio"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"/>
+    </LinearLayout>
 </LinearLayout>

@@ -79,7 +79,6 @@ public class UsuarioAdapter extends BaseAdapter {
         TextView cid_uf = (TextView) convertView.findViewById(R.id.cid_uf);
 
         ImageView img_detalhes= (ImageView) convertView.findViewById(R.id.img_detalhes);
-        ImageView img_msg= (ImageView) convertView.findViewById(R.id.img_msg);
         ImageView img_ligar= (ImageView) convertView.findViewById(R.id.img_ligar);
 
         final Usuario u = movieItems.get(position);
@@ -97,14 +96,7 @@ public class UsuarioAdapter extends BaseAdapter {
             cid_uf.setText(u.getCidade() + "-" + u.getUf());
         }
 
-        img_msg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i= new Intent(activity, ChatActivity.class);
-                i.putExtra("email",u.getEmail());
-                activity.startActivity(i);
-            }
-        });
+
         // thumbnail image
         //thumbNail.setImageUrl(u.getFoto(), imageLoader);
         img_detalhes.setOnClickListener(new View.OnClickListener() {

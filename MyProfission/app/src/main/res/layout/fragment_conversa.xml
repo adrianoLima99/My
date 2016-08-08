@@ -4,10 +4,17 @@
     android:layout_height="match_parent">
 
 
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="excluir"
+        android:layout_marginTop="120dp"/>
     <ListView
         android:id="@+id/lv_sala"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+
         ></ListView>
+
 </LinearLayout>

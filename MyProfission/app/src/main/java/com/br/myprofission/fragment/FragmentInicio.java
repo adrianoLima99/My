@@ -3,6 +3,7 @@ package com.br.myprofission.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.br.myprofission.ChatActivity;
 import com.br.myprofission.R;
 import com.br.myprofission.adapter.UsuarioAdapter;
 import com.br.myprofission.dao.BDUsuario;
@@ -82,6 +85,22 @@ public class FragmentInicio extends Fragment implements  SwipeRefreshLayout.OnRe
                 lista();
             }
         });
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Object email = usuario.get(position).getEmail();
+                Object img= usuario.get(position).getFoto();
+
+                Intent i = new Intent(activity, ChatActivity.class);
+                i.putExtra("email",""+email);//email para quem vai ser enviado a msg
+                i.putExtra("img",""+img);
+                startActivity(i);
+            }
+        });
+
 
     }
 

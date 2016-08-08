@@ -68,9 +68,14 @@ public class SalaChatAdapter extends BaseAdapter {
         TextView nome = (TextView) convertView.findViewById(R.id.txt_nome);
         TextView nome_exibicao = (TextView) convertView.findViewById(R.id.txt_nome_exibicao);
 
+
         final SalaChat s = movieItems.get(position);
 
+        CircularNetworkImageView image = (CircularNetworkImageView) convertView.findViewById(R.id.image);
 
+        image.setImageUrl(s.getCaminhoImg(), imageLoader);
+
+        nome.setText("caminho="+s.getCaminhoImg());
         //nome.setText(s.getNome());
         nome_exibicao.setText(s.getNomeExibicao());
 

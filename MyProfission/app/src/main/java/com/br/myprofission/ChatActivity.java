@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.br.myprofission.adapter.ChatListAdapter;
+import com.br.myprofission.dao.BDNotificacao;
 import com.br.myprofission.dao.BDSala;
 import com.br.myprofission.dao.Chat;
 import com.br.myprofission.dao.SalaChat;
@@ -23,8 +25,11 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Random;
+
+import okhttp3.internal.Util;
 
 public class ChatActivity extends ListActivity {
 
@@ -36,12 +41,15 @@ public class ChatActivity extends ListActivity {
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
     private String emailProfissional;
+    private String imgExibicao;
     private String[] emails;
     private String salaBatePapo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
+
+
         mUsername=Utilitaria.retornaEmail(ChatActivity.this);
         BDSala sl= new BDSala(ChatActivity.this);
         Intent intent=getIntent();
@@ -49,28 +57,41 @@ public class ChatActivity extends ListActivity {
 
             Bundle params= intent.getExtras();
             if(params!=null) {
-                emailProfissional=params.getString("email");
-            }
-            if(params.getString("nomeSala")!=null){//vem da lista de conversas ja criada
-                salaBatePapo=params.getString("nomeSala");
-            }else{//aqui se criara uma nova conversa
+                emailProfissional = params.getString("email");
+                imgExibicao=params.getString("img");
+                Toast.makeText(ChatActivity.this, "emailProfissiona-" + emailProfissional, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatActivity.this, "img-" + imgExibicao, Toast.LENGTH_SHORT).show();
+                //}
+                // if(params.getString("nomeSala")!=null){//vem da lista de conversas ja criada
+                salaBatePapo = params.getString("nomeSala");
+                //}else{//aqui se criara uma nova conversa
 
                 emails = Utilitaria.retornaEmail(ChatActivity.this).split("@");
                 salaBatePapo = emails[0];
                 emails = emailProfissional.split("@");
                 salaBatePapo += emails[0];
-                sl.salvaServidor(ChatActivity.this,salaBatePapo);
+                //sl.salvaServidor(ChatActivity.this, salaBatePapo, emailProfissional, Utilitaria.retornaEmail(this));
+                //   }
+                if(!sl.jaExiste(Utilitaria.retornaEmail(ChatActivity.this),emailProfissional)) {//se ja existe esse nome nao pode ser mais cadastrado
+                    SalaChat s = new SalaChat();
+                    s.setNome(salaBatePapo);
+                    s.setNomeExibicao(emailProfissional);
+                    s.setEmailDestino(emailProfissional);
+                    s.setEmailorigem(Utilitaria.retornaEmail(this));
+                    s.setCaminhoImg(imgExibicao);
+                    sl.inserir(s);
+                    sl.salvaServidor(ChatActivity.this,salaBatePapo,emailProfissional, Utilitaria.retornaEmail(this));
+                }else{
+                    salaBatePapo = sl.retornaSala(Utilitaria.retornaEmail(ChatActivity.this),emailProfissional);
+                }
             }
         }
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tb_topo);
+        toolbar.setTitle(emailProfissional);
+        toolbar.setNavigationIcon(R.mipmap.voltar);
 
-        if(!sl.jaExiste(salaBatePapo)) {//se ja existe esse nome nao pode ser mais cadastrado
-            SalaChat s = new SalaChat();
-            s.setNome(salaBatePapo);
-            s.setNomeExibicao(emailProfissional);
-            sl.inserir(s);
-            sl.salvaServidor(ChatActivity.this,salaBatePapo);
-        }
+
 
         // Setup our Firebase mFirebaseRef
 
@@ -91,7 +112,25 @@ public class ChatActivity extends ListActivity {
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(ChatActivity.this, "para: "+emailProfissional, Toast.LENGTH_SHORT).show();
                 sendMessage();
+                //Toast.makeText(ChatActivity.this, "to enviando\n"+FirebaseInstanceId.getInstance().getToken()+","+Utilitaria.retornaEmail(ChatActivity.this)+"-"+emailProfissional, Toast.LENGTH_SHORT).show();
+                Log.i("enviando","to enviando\n"+FirebaseInstanceId.getInstance().getToken()+","+Utilitaria.retornaEmail(ChatActivity.this)+"-"+emailProfissional);
+                // Toast.makeText(ChatActivity.this, "token="+FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(ChatActivity.this, Utilitaria.retornaEmail(ChatActivity.this), Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                            }
+                        });
+
+                        BDNotificacao bd= new BDNotificacao(ChatActivity.this);
+                        bd.notificacao(FirebaseInstanceId.getInstance().getToken(),Utilitaria.retornaEmail(ChatActivity.this),emailProfissional);
+
+                    }
+                }).start();
+
             }
         });
 

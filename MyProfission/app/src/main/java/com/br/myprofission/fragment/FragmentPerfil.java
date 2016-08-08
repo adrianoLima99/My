@@ -192,7 +192,7 @@ public class FragmentPerfil extends Fragment {
             edt_endereco.setText(lista.get(i).getLogradouro());
             edt_latitude.setText(""+lista.get(i).getLatitude());
             edt_longitude.setText(""+lista.get(i).getLongitude());
-            try {
+           try {
                 Address endereco;
                 if(lista.get(i).getLatitude()!=null && lista.get(i).getLatitude()!=0.0  && lista.get(i).getLongitude()!=null && lista.get(i).getLongitude()!=0.0) {
                    // Toast.makeText(activity, "pegos da lista", Toast.LENGTH_SHORT).show();
@@ -200,6 +200,7 @@ public class FragmentPerfil extends Fragment {
                     edt_cidade.setText(endereco.getLocality());
                     edt_uf.setText(endereco.getAdminArea());
                     edt_pais.setText(endereco.getCountryName());
+
                 }
 
             } catch (IOException e) {

@@ -39,10 +39,10 @@ public class BDSala {
     }
 
 
-    public boolean jaExiste(String nome) {
+    public boolean jaExiste(String emailUsuario,String emailProfissional) {
 
-        String[] colunas = new String[] { "_id"};
-        String where =" nome='"+nome+"'" ;
+        String[] colunas = new String[] { "_id,nome"};
+        String where =" (email_origem='"+emailUsuario+"' AND email_destino='"+emailProfissional+"') OR (email_origem='"+emailProfissional+"' AND email_destino='"+emailUsuario+"') ";
         Cursor cursor = bd.query("sala_chat", colunas,where, null, null, null, "nome ");
 
         if (cursor.getCount() > 0) {
@@ -75,13 +75,30 @@ public class BDSala {
         //bd.close();
         return (list);
     }
+    public String retornaSala(String email_origem,String email_destino) {//retorna o nome da sala independement de quem seja o emissor ou receptor se os usuarios ja tem uma conexao outra não sera criada
+
+        String sala=null;
+        String[] colunas = new String[] { "_id", "nome"};
+        String where = " (email_origem='"+email_origem+"' AND email_destino='"+email_destino+"') OR ( email_destino='"+email_origem+"' AND email_origem='"+email_destino+"')" ;
+        Cursor cursor = bd.query("sala_chat", colunas,where, null, null, null, "nome ");
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+                sala=cursor.getString(1);
+        }
+        //bd.close();
+        return sala;
+    }
 
 
     public void inserir(SalaChat s) {
 		ContentValues valores = new ContentValues();
 		valores.put("nome", s.getNome());
         valores.put("nome_exibicao", s.getNomeExibicao());
-
+        valores.put("email_origem", s.getEmailorigem());
+        valores.put("email_destino", s.getEmailDestino());
+        valores.put("img_exibicao",s.getCaminhoImg());
 		bd.insert("sala_chat", null, valores);
 	}
 
@@ -93,8 +110,8 @@ public class BDSala {
 
 
     }
-    public void deletar(SalaChat s) {
-		bd.delete("sala_chat", "_id = " + s.getId(), null);
+    public void deletar() {
+		bd.delete("sala_chat", null, null);
 	}
 
 
@@ -102,7 +119,7 @@ public class BDSala {
         bd.close();
     }
 
-    public void salvaServidor(final Context context,final String nome ){
+    public void salvaServidor(final Context context, final String nome, final String emailDestino, final String emailOrigem ){
 
         Toast.makeText(context, "nome="+nome, Toast.LENGTH_SHORT).show();
         String url="http://www.seriadosweb.biz/precciso/controller/controllerSalaChat.php";
@@ -134,7 +151,8 @@ public class BDSala {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("acao","inserir");//vai para metodo q verifica se o usuario ja possui registro e ja tem creditos criados , assim em vez de cria uma nova tupla ele apenas atualiza a existente
                 params.put("nome",nome);
-
+                params.put("origem",emailOrigem);
+                params.put("destino",emailDestino);
                 return params;
             }
 
@@ -170,8 +188,11 @@ public class BDSala {
 
                                         s.setNome(obj.getString("nome"));
                                         s.setNomeExibicao(obj.getString("nome_exibicao"));
-                                        if(!bd.jaExiste(obj.getString("nome")))
-                                            bd.inserir(s);
+                                        s.setEmailorigem(obj.getString("origem"));
+                                        s.setEmailDestino(obj.getString("destino"));
+
+                                        //if(!bd.jaExiste(obj.getString("nome")))
+                                          //  bd.inserir(s);
 
                                     }
                                 } catch (JSONException e) {

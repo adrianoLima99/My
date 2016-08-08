@@ -2,22 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
-
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_topo"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="#FFF"/>
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/listFooter"
-        android:layout_alignParentTop="true"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:layout_below="@id/tb_topo"
+        android:divider="@null"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
     <LinearLayout
         android:id="@+id/listFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        >
 
         <EditText
             android:id="@+id/messageInput"

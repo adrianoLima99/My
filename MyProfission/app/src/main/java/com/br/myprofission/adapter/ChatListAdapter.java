@@ -34,28 +34,34 @@ public  class ChatListAdapter extends FirebaseListAdapter<Chat> {
      */
     @Override
     protected void populateView(View view, Chat chat) {
-
-
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1000);
         // Map a Chat object to an entry in our listview
 
         String author = chat.getAuthor();
-        TextView authorText = (TextView) view.findViewById(R.id.author);
+        //TextView authorText = (TextView) view.findViewById(R.id.author);
         TextView txt_msg = (TextView) view.findViewById(R.id.message);
-        authorText.setText(author + ": ");
+        //authorText.setLayoutParams(params);
+        txt_msg.setLayoutParams(params);
+       // authorText.setText(author + ": ");
         // If the message was sent by this user, color it differently
         if (author != null && author.equals(mUsername)) {
-            authorText.setTextColor(Color.WHITE);
-            //authorText.setLayoutParams(params);
 
+           /* authorText.setTextColor(Color.WHITE);
+            authorText.setGravity(Gravity.RIGHT);
             authorText.setBackgroundColor(Color.rgb(30,144,255));
-            txt_msg.setBackgroundColor(Color.rgb(30,144,255));
-            txt_msg.setTextColor(Color.WHITE);
+            *///txt_msg.setBackgroundColor(Color.rgb(173,216,230));
+
+            txt_msg.setTextColor(Color.BLUE);
+            txt_msg.setGravity(Gravity.RIGHT);
 
         } else {
-            authorText.setTextColor(Color.BLACK);
+            /*authorText.setTextColor(Color.BLACK);
             authorText.setBackgroundColor(Color.rgb(211,211,211));
-            txt_msg.setBackgroundColor(Color.rgb(211,211,211));
+            authorText.setGravity(Gravity.LEFT);
+            *///txt_msg.setBackgroundColor(Color.rgb(211,211,211));
             txt_msg.setTextColor(Color.BLACK);
+            txt_msg.setGravity(Gravity.LEFT);
            // authorText.setGravity(View.FOCUS_RIGHT);
         }
         //((TextView) view.findViewById(R.id.message)).setText(chat.getMessage());
