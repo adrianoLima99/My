@@ -31,23 +31,27 @@
         </activity>
         <activity android:name=".UsuarioActivity" />
         <activity android:name=".MensagemActivity" />
-        <activity android:name=".FotoPerfilActivity" />
+        <activity
+            android:name=".FotoPerfilActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AtualizaConexoesActivity" />
         <activity
             android:name=".ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".LembraSenhaActivity" />
+
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service android:name=".FirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

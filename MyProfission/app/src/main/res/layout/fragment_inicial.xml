@@ -17,12 +17,18 @@
             android:layout_height="wrap_content"
 
             >
-            <EditText
+           <!-- <EditText
                 android:id="@+id/precisa"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:hint="Do que precisa?"
-                />
+                />-->
+            <AutoCompleteTextView
+                android:id="@+id/precisa"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:hint="Do que precisa?"/>
+
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
@@ -36,9 +42,11 @@
             android:id="@+id/lv_profissionais"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:layout_margin="3dp"
             android:padding="2dp"
+            android:divider="@color/list_divider"
+            android:dividerHeight="1dp"
+            android:listSelector="@drawable/list_row_selector"
             >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>

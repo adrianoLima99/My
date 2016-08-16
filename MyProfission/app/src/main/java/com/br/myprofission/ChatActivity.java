@@ -11,15 +11,19 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.br.myprofission.adapter.ChatListAdapter;
+import com.br.myprofission.app.AppController;
 import com.br.myprofission.dao.BDNotificacao;
 import com.br.myprofission.dao.BDSala;
 import com.br.myprofission.dao.Chat;
 import com.br.myprofission.dao.SalaChat;
+import com.br.myprofission.util.CircularNetworkImageView;
 import com.br.myprofission.util.Utilitaria;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -49,8 +53,12 @@ public class ChatActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
 
-
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
         mUsername=Utilitaria.retornaEmail(ChatActivity.this);
+        CircularNetworkImageView image = (CircularNetworkImageView) findViewById(R.id.image);
+        TextView txt_titulo= (TextView) findViewById(R.id.txt_titulo);
+        ImageView img_voltar= (ImageView) findViewById(R.id.img_voltar);
+
         BDSala sl= new BDSala(ChatActivity.this);
         Intent intent=getIntent();
         if(intent!=null){
@@ -87,12 +95,23 @@ public class ChatActivity extends ListActivity {
             }
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tb_topo);
-        toolbar.setTitle(emailProfissional);
-        toolbar.setNavigationIcon(R.mipmap.voltar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.tb_topo);
 
+        if (imageLoader == null)
+            imageLoader = AppController.getInstance().getImageLoader();
+        if(imgExibicao!=null)
+            image.setImageUrl(imgExibicao, imageLoader);
 
+        txt_titulo.setText(emailProfissional);
 
+        img_voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ChatActivity.this,MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
         // Setup our Firebase mFirebaseRef
 
         mFirebaseRef = new Firebase(FIREBASE_URL).child(salaBatePapo);
@@ -115,7 +134,7 @@ public class ChatActivity extends ListActivity {
                 Toast.makeText(ChatActivity.this, "para: "+emailProfissional, Toast.LENGTH_SHORT).show();
                 sendMessage();
                 //Toast.makeText(ChatActivity.this, "to enviando\n"+FirebaseInstanceId.getInstance().getToken()+","+Utilitaria.retornaEmail(ChatActivity.this)+"-"+emailProfissional, Toast.LENGTH_SHORT).show();
-                Log.i("enviando","to enviando\n"+FirebaseInstanceId.getInstance().getToken()+","+Utilitaria.retornaEmail(ChatActivity.this)+"-"+emailProfissional);
+               /// Log.i("enviando","to enviando\n"+FirebaseInstanceId.getInstance().getToken()+","+Utilitaria.retornaEmail(ChatActivity.this)+"-"+emailProfissional);
                 // Toast.makeText(ChatActivity.this, "token="+FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_SHORT).show();
                // Toast.makeText(ChatActivity.this, Utilitaria.retornaEmail(ChatActivity.this), Toast.LENGTH_SHORT).show();
                 new Thread(new Runnable() {

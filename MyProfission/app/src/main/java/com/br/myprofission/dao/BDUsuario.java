@@ -23,6 +23,7 @@ import com.br.myprofission.LoginActivity;
 import com.br.myprofission.MainActivity;
 import com.br.myprofission.adapter.UsuarioAdapter;
 import com.br.myprofission.util.Utilitaria;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,31 +54,56 @@ public class BDUsuario {
         String[] colunas = new String[] { "_id","nome", "profissao", "numero","email","sobre","latitude","longitude","cidade","pais","uf","logradouro"};
        // String where = condicao ;
         Cursor cursor = bd.query("usuario", colunas,null, null, null, null,null);
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                do {
 
-            do {
+                    Usuario u = new Usuario();
+                    u.setId(cursor.getLong(0));
+                    u.setNome(cursor.getString(1));
+                    u.setProfissao(cursor.getString(2));
+                    u.setNumero(cursor.getString(3));
+                    u.setEmail(cursor.getString(4));
+                    u.setSobre(cursor.getString(5));
+                    u.setLatitude(cursor.getDouble(6));
+                    u.setLongitude(cursor.getDouble(7));
+                    u.setCidade(cursor.getString(8));
+                    u.setPais(cursor.getString(9));
+                    u.setUf(cursor.getString(10));
+                    u.setLogradouro(cursor.getString(11));
+                    list.add(u);
 
-                Usuario u = new Usuario();
-                u.setId(cursor.getLong(0));
-                u.setNome(cursor.getString(1));
-                u.setProfissao(cursor.getString(2));
-                u.setNumero(cursor.getString(3));
-                u.setEmail(cursor.getString(4));
-                u.setSobre(cursor.getString(5));
-                u.setLatitude(cursor.getDouble(6));
-                u.setLongitude(cursor.getDouble(7));
-                u.setCidade(cursor.getString(8));
-                u.setPais(cursor.getString(9));
-                u.setUf(cursor.getString(10));
-                u.setLogradouro(cursor.getString(11));
-                list.add(u);
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return (list);
+    }
+    public String retornaProfissao(String email) {
+
+        String profissao="Não informado";
+        String[] colunas = new String[] { "profissao"};
+        String where = " email='"+email+"'" ;
+        Cursor cursor = bd.query("usuario", colunas,where, null, null, null,null);
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                do {
+
+                    profissao = cursor.getString(0);
+
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
+        }
+        //bd.close();
+        return profissao;
     }
     public double retornaLat() {
 
@@ -85,15 +111,18 @@ public class BDUsuario {
         String[] colunas = new String[] { "latitude"};
         // String where = condicao ;
         Cursor cursor = bd.query("usuario", colunas,null, null, null, null,null);
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                do {
 
-            do {
+                    lat = cursor.getDouble(0);
 
-                lat = cursor.getDouble(0);
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return lat;
@@ -104,15 +133,18 @@ public class BDUsuario {
         String[] colunas = new String[] { "longitude"};
         // String where = condicao ;
         Cursor cursor = bd.query("usuario", colunas,null, null, null, null,null);
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                do {
 
-            do {
+                    longi = cursor.getDouble(0);
 
-                longi = cursor.getDouble(0);
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return longi;
@@ -131,6 +163,7 @@ public class BDUsuario {
         valores.put("logradouro",u.getLogradouro());
         valores.put("uf",u.getUf());
         bd.insert("usuario", null, valores);
+
 
 	}
 
@@ -202,7 +235,7 @@ public class BDUsuario {
                 params.put("sobre",sobre);
                 params.put("profissao",profissao);
                 params.put("senha",senha);
-
+                params.put("token",FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
 
@@ -398,6 +431,7 @@ public class BDUsuario {
                                         Intent intent = new Intent(context, MainActivity.class);
                                         context.startActivity(intent);
                                     }
+                                    bd.fecharConexao();//fecha conexao
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -503,7 +537,7 @@ public class BDUsuario {
 
                 Volley.newRequestQueue(context).add(jsonRequest);
             }
-
+      //  bd.fecharConexao();
 
     }
 }

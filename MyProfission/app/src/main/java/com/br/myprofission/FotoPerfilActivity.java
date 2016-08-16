@@ -26,18 +26,16 @@ import java.io.FileOutputStream;
 
 public class FotoPerfilActivity extends AppCompatActivity {
     private static final int IMAGEM_INTERNA=12;
+    private static final int TIRA_FOTO=100;
     private ImageView img_perfil;
-
+    private String caminho=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foto_perfil);
         img_perfil= (ImageView) findViewById(R.id.img_perfil);
 
-
-
-
-        String caminho = Environment.getExternalStorageDirectory() +
+        caminho = Environment.getExternalStorageDirectory() +
                 "/MyProfession/"+Utilitaria.retornaEmail(FotoPerfilActivity.this)+".png";
 
         if(!Utilitaria.diretorioVazio(caminho)){
@@ -78,6 +76,16 @@ public class FotoPerfilActivity extends AppCompatActivity {
                 salvarFoto(bitmap1);
             }
         }
+
+        if(requestCode == TIRA_FOTO) {
+
+            if (resultCode != RESULT_CANCELED) {
+                final Bitmap bitmap1 = BitmapFactory.decodeFile(caminho);
+                img_perfil.setImageBitmap(bitmap1);
+                salvarFoto(bitmap1);
+            }
+        }
+
     }
     public void salvarFoto(Bitmap foto){
 
@@ -111,7 +119,7 @@ public class FotoPerfilActivity extends AppCompatActivity {
                 "/MyProfession/";
         final String uploadFileName = Utilitaria.retornaEmail(FotoPerfilActivity.this)+".png";
         Toast.makeText(FotoPerfilActivity.this, ""+uploadFileName, Toast.LENGTH_SHORT).show();
-        BDUsuario bd= new BDUsuario(FotoPerfilActivity.this);
+        final BDUsuario bd= new BDUsuario(FotoPerfilActivity.this);
         bd.alterarFoto(FotoPerfilActivity.this,Utilitaria.retornaEmail(FotoPerfilActivity.this),uploadFileName);
         new Thread(new Runnable() {
             public void run() {
@@ -122,8 +130,27 @@ public class FotoPerfilActivity extends AppCompatActivity {
                 });
 
                 Utilitaria.uploadFile(uploadFilePath + "" + uploadFileName,FotoPerfilActivity.this);
+                bd.fecharConexao();
             }
         }).start();
 
-        }
     }
+    public void camera(View v){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        String arquivo = Environment.getExternalStorageDirectory() + "/MyProfession/"+Utilitaria.retornaEmail(FotoPerfilActivity.this)+".png";
+
+        File file = new File(arquivo);
+
+        Uri outputFileUri = Uri.fromFile(file);
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+        startActivityForResult(intent, TIRA_FOTO);
+    }
+    public void voltar(View v){
+        Intent i = new Intent(FotoPerfilActivity.this,MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+}

@@ -15,8 +15,10 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.br.myprofission.R;
 import com.br.myprofission.app.AppController;
+import com.br.myprofission.dao.BDUsuario;
 import com.br.myprofission.dao.Contato;
 import com.br.myprofission.dao.SalaChat;
+import com.br.myprofission.dao.Usuario;
 import com.br.myprofission.util.CircularNetworkImageView;
 import com.br.myprofission.util.Utilitaria;
 
@@ -55,7 +57,6 @@ public class SalaChatAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
         if (inflater == null)
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
@@ -65,18 +66,17 @@ public class SalaChatAdapter extends BaseAdapter {
         /*NetworkImageView thumbNail = (NetworkImageView) convertView
                 .findViewById(R.id.thumbnail);
 */
-        TextView nome = (TextView) convertView.findViewById(R.id.txt_nome);
+        TextView profissao = (TextView) convertView.findViewById(R.id.txt_profissao);
         TextView nome_exibicao = (TextView) convertView.findViewById(R.id.txt_nome_exibicao);
 
 
         final SalaChat s = movieItems.get(position);
+        BDUsuario bd = new BDUsuario(activity);
 
         CircularNetworkImageView image = (CircularNetworkImageView) convertView.findViewById(R.id.image);
-
-        image.setImageUrl(s.getCaminhoImg(), imageLoader);
-
-        nome.setText("caminho="+s.getCaminhoImg());
-        //nome.setText(s.getNome());
+        if(s.getCaminhoImg()!=null)
+            image.setImageUrl(s.getCaminhoImg(), imageLoader);
+        profissao.setText(bd.retornaProfissao(s.getNomeExibicao()));
         nome_exibicao.setText(s.getNomeExibicao());
 
 

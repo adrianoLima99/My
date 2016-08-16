@@ -28,20 +28,23 @@ public class BD {
         String[] colunas = new String[] { "_id", "nome", "numero"};
        // String where = condicao ;
         Cursor cursor = bd.query("contato", colunas,null, null, null, null, "nome ");
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                do {
 
-            do {
+                    Contato c = new Contato();
+                    c.setId(cursor.getLong(0));
+                    c.setNome(cursor.getString(1));
+                    c.setNumero(cursor.getString(2));
 
-                Contato c = new Contato();
-                c.setId(cursor.getLong(0));
-                c.setNome(cursor.getString(1));
-                c.setNumero(cursor.getString(2));
+                    list.add(c);
 
-                list.add(c);
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return (list);
@@ -52,9 +55,12 @@ public class BD {
         String[] colunas = new String[] { "_id"};
         String where =" numero='"+numero+"'" ;
         Cursor cursor = bd.query("contato", colunas,where, null, null, null, "nome ");
-
-        if (cursor.getCount() > 0) {
-         return true;
+        try {
+            if (cursor.getCount() > 0) {
+                return true;
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return false;

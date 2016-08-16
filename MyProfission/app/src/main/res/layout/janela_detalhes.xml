@@ -14,7 +14,7 @@
         android:textStyle="bold"
         android:textSize="16sp"
         android:text="Vazio"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         android:padding="5dp"
         />
     <TextView
@@ -25,7 +25,7 @@
         android:textSize="16sp"
         android:text="Vazio"
         android:layout_below="@id/txt_nome"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         android:padding="5dp"
         />
     <TextView
@@ -36,7 +36,7 @@
         android:textSize="16sp"
         android:text="Vazio"
         android:layout_below="@id/txt_profissao"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         android:padding="5dp"
         />
     <TextView

@@ -4,6 +4,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -27,7 +29,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     private void ShowNotification(String message) {
-        Log.i("msg",message);
+        //Log.i("msg",message);
         String conteudo[]=message.trim().split("-");
         String sala=conteudo[0];
         String emissor=conteudo[1];
@@ -47,7 +49,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     .setContentTitle("Você tem 1 nova mensagem")
                     .setContentText(emissor +" lhe enviou uma mensagem")
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.mipmap.ic_stat_buskrnotificacao_v11)
                     .setContentIntent(pendingIntent);
 
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

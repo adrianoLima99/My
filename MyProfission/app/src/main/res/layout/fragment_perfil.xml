@@ -9,6 +9,12 @@
         android:layout_margin="5dp"
         android:padding="5dp"
         android:orientation="vertical">
+       <FrameLayout
+           android:id="@+id/frl_image"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="110dp"
+           android:layout_gravity="center_horizontal">
         <com.github.siyamed.shapeimageview.CircularImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -16,18 +22,16 @@
             app:siBorderWidth="6dp"
             app:siBorderColor="#FFF"
             android:id="@+id/img_perfil"
-            android:layout_marginTop="120dp"
-            android:onClick="AlterarFoto"
             android:layout_gravity="center"/>
-        <!--<ImageView
-            android:id="@+id/img_perfil"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:src="@mipmap/usuario"
-            android:layout_marginTop="120dp"
-            android:onClick="AlterarFoto"
-            android:layout_centerHorizontal="true"/>
--->
+        <ImageView
+            android:id="@+id/img_editar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add_foto"
+            android:layout_marginTop="160dp"
+            android:layout_gravity="right|center_horizontal"
+            />
+       </FrameLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_nome"
             android:layout_width="match_parent"
@@ -59,12 +63,17 @@
             android:layout_height="wrap_content"
             >
 
-            <EditText
+           <!-- <EditText
                 android:id="@+id/edt_profissao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Profissão"
-                android:inputType="textAutoComplete|textAutoCorrect|"/>
+                android:inputType="textAutoComplete|textAutoCorrect|"/>-->
+            <AutoCompleteTextView
+                android:id="@+id/edt_profissao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="profissao"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

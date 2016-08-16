@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -237,15 +241,23 @@ public class Utilitaria {
 
         return dist * 1000; //em metros
     }
-public static String nomeSala(String emissor,String receptador){
-    String  sala=null;
-    String[] s=null;
+    public static String nomeSala(String emissor,String receptador){
+        String  sala=null;
+        String[] s=null;
 
-    s = emissor.split("@");
-    sala=s[0];
-    s=receptador.split("@");
-    sala+=s[0];
+        s = emissor.split("@");
+        sala=s[0];
+        s=receptador.split("@");
+        sala+=s[0];
 
-    return sala;
-}
+        return sala;
+    }
+    public static boolean gpsAtivo(Context context){
+        LocationManager manager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
+        boolean isOn = manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
+        if(isOn){
+             return true;
+        }
+        return  false;
+    }
 }

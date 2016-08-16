@@ -44,9 +44,12 @@ public class BDSala {
         String[] colunas = new String[] { "_id,nome"};
         String where =" (email_origem='"+emailUsuario+"' AND email_destino='"+emailProfissional+"') OR (email_origem='"+emailProfissional+"' AND email_destino='"+emailUsuario+"') ";
         Cursor cursor = bd.query("sala_chat", colunas,where, null, null, null, "nome ");
-
-        if (cursor.getCount() > 0) {
-            return true;
+        try {
+            if (cursor.getCount() > 0) {
+                return true;
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return false;
@@ -55,10 +58,10 @@ public class BDSala {
     public List<SalaChat> buscar() {
 
         List<SalaChat> list = new ArrayList<SalaChat>();
-        String[] colunas = new String[] { "_id", "nome", "nome_exibicao"};
+        String[] colunas = new String[] { "_id", "nome", "nome_exibicao","img_exibicao"};
        // String where = condicao ;
         Cursor cursor = bd.query("sala_chat", colunas,null, null, null, null, "nome ");
-
+        try{
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
 
@@ -68,9 +71,13 @@ public class BDSala {
                 s.setId(cursor.getLong(0));
                 s.setNome(cursor.getString(1));
                 s.setNomeExibicao(cursor.getString(2));
+                s.setCaminhoImg(cursor.getString(3));
                 list.add(s);
 
             } while (cursor.moveToNext());
+        }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return (list);
@@ -81,11 +88,14 @@ public class BDSala {
         String[] colunas = new String[] { "_id", "nome"};
         String where = " (email_origem='"+email_origem+"' AND email_destino='"+email_destino+"') OR ( email_destino='"+email_origem+"' AND email_origem='"+email_destino+"')" ;
         Cursor cursor = bd.query("sala_chat", colunas,where, null, null, null, "nome ");
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
-                sala=cursor.getString(1);
+                sala = cursor.getString(1);
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return sala;
@@ -227,5 +237,70 @@ public class BDSala {
         requestQueue.add(stringRequest);
 
     }
+    public void existeSalaServidor(final Context context,final String emailOrigem,final String emailDestino  ){
 
+
+        String url="http://www.seriadosweb.biz/precciso/controller/controllerSala.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if(response.trim().equals("nao")) {
+                            Toast.makeText(context, "Operação falhou!", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            if(response.length()>0){
+                                BDSala bd = new BDSala(context);
+                                if(!bd.jaExiste(emailOrigem,emailDestino)) {
+                                    JSONArray json = null;
+                                    try {
+                                        json = new JSONArray(response);
+
+                                        for (int i = 0; i < json.length(); i++) {
+                                            JSONObject obj = json.getJSONObject(i);
+                                            SalaChat s = new SalaChat();
+
+                                            s.setNome(obj.getString("nome"));
+                                            s.setNomeExibicao(obj.getString("nome_exibicao"));
+                                            s.setEmailDestino(obj.getString("destino"));
+                                            s.setEmailorigem(obj.getString("origem"));
+                                            s.setCaminhoImg(obj.getString("imgExibicao"));
+
+                                            bd.inserir(s);
+
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                            Toast.makeText(context, "resposta =" + response.trim(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Houve 1 erro!\nTente novamente"+ error, Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("acao","verificaExisteSala");//vai para metodo q verifica se o usuario ja possui registro e ja tem creditos criados , assim em vez de cria uma nova tupla ele apenas atualiza a existente
+                params.put("emailOrigem",emailOrigem);
+                params.put("emailDestino",emailDestino);
+
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+
+    }
 }

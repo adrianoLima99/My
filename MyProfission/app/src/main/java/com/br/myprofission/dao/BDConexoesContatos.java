@@ -28,24 +28,27 @@ public class BDConexoesContatos {
         String[] colunas = new String[] { "_id", "nome", "numero","profissao","uf","email","sobre","foto"};
        // String where = condicao ;
         Cursor cursor = bd.query("contatoConexoes", colunas,null, null, null, null, "nome");
+        try {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                do {
 
-            do {
+                    ContatoConexoes c = new ContatoConexoes();
+                    c.setId(cursor.getLong(0));
+                    c.setNome(cursor.getString(1));
+                    c.setNumero(cursor.getString(2));
+                    c.setProfissao(cursor.getString(3));
+                    c.setUf(cursor.getString(4));
+                    c.setEmail(cursor.getString(5));
+                    c.setSobre(cursor.getString(6));
+                    c.setFoto(cursor.getString(7));
+                    list.add(c);
 
-                ContatoConexoes c = new ContatoConexoes();
-                c.setId(cursor.getLong(0));
-                c.setNome(cursor.getString(1));
-                c.setNumero(cursor.getString(2));
-                c.setProfissao(cursor.getString(3));
-                c.setUf(cursor.getString(4));
-                c.setEmail(cursor.getString(5));
-                c.setSobre(cursor.getString(6));
-                c.setFoto(cursor.getString(7));
-                list.add(c);
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         //bd.close();
         return (list);
@@ -56,11 +59,13 @@ public class BDConexoesContatos {
         String[] colunas = new String[] { "_id"};
          String where = " email='"+email+"'" ;
         Cursor cursor = bd.query("contatoConexoes", colunas,where, null, null, null, "nome");
-
-        if (cursor.getCount() > 0) {
-          return true;
+        try {
+            if (cursor.getCount() > 0) {
+                return true;
+            }
+        }finally {
+            cursor.close();
         }
-
         return false;
     }
 

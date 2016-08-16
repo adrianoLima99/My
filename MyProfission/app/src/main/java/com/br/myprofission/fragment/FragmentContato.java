@@ -74,5 +74,6 @@ public class FragmentContato extends Fragment {
             txt_vazio.setText("Seus contatos ainda não estão usando o Buskr");
             txt_vazio.setTextSize(13);
         }
+        bd.fecharConexao();
     }
 }

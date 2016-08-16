@@ -54,10 +54,6 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-
-    private List<Usuario> usuario = new ArrayList<Usuario>();
-//    private  ListView lv ;
-    private UsuarioAdapter adapter;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -68,20 +64,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-      /*  new Thread(new Runnable() {
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                    }
-                });
-                FirebaseInstanceIDService t = new FirebaseInstanceIDService();
-                t.onTokenRefresh();
-
-            }
-        }).start();*/
-
-
         bd_user = new BDUsuario(this);
 
         if(bd_user.buscar().size()==0){//chama a atividade de cadastro de usuario
@@ -89,17 +71,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-
+        bd_user.fecharConexao();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         viewPager= (ViewPager) findViewById(R.id.viewPager);
-        configurarViewPager(viewPager);
-
         tabLayout= (TabLayout) findViewById(R.id.tabs);
+        configurarViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-
 
 
         //verifica as permissoes de acesso ao contato do usuario
@@ -119,9 +99,21 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CONTACTS},0);
                 }
             }
-
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)) {
+                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check "nunca mais mostre este alerta"
+                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
+                    Toast.makeText(MainActivity.this, "OPS!! vc negou a permissao de acesso a seu contatos", Toast.LENGTH_SHORT).show();
+                    /*Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.setData(Uri.parse("package:com.br.myprofission"));
+                    startActivity(i);*/
+                } else {
+                    // Solicita a permissão
+                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},0);
+                }
+            }
             if (checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
                 // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_NETWORK_STATE)) {
@@ -153,9 +145,19 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
                 }
             }
+
         }
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gravaContatosTel();///pega o contatos e grava banco sqlite
+    }
+    public void gravaContatosTel(){
         try {
             String[] PROJECTION = new String[] { ContactsContract.Contacts._ID,
                     ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER };
@@ -181,23 +183,22 @@ public class MainActivity extends AppCompatActivity {
                         bd.inserir(contato);
 
                     }
-
+                    bd.fecharConexao();
                 } while (c.moveToNext());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-
     private void configurarViewPager(ViewPager viewPager){
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new FragmentPerfil(),"Perfil");
         viewPagerAdapter.addFragment(new FragmentInicio(),"Busca");
-        viewPagerAdapter.addFragment(new FragmentConversa(),"Conversas");
+      //  viewPagerAdapter.addFragment(new FragmentConversa(),"Conversas");
         viewPagerAdapter.addFragment(new FragmentContato(),"Contatos");
         viewPager.setAdapter(viewPagerAdapter);
+
+
     }
 
 
@@ -227,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         if(Utilitaria.Conectado(MainActivity.this)) {
             BDUsuario bdUsuario = new BDUsuario(MainActivity.this);
             bdUsuario.conexoes(MainActivity.this);
+            bdUsuario.fecharConexao();
         }
 
     }
