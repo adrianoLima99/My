@@ -42,9 +42,11 @@ import com.br.myprofission.ChatActivity;
 import com.br.myprofission.FotoPerfilActivity;
 import com.br.myprofission.MainActivity;
 import com.br.myprofission.R;
+import com.br.myprofission.dao.BDNotificacao;
 import com.br.myprofission.dao.BDUsuario;
 import com.br.myprofission.dao.Usuario;
 import com.br.myprofission.util.Utilitaria;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 import java.util.List;
@@ -95,12 +97,10 @@ public class FragmentPerfil extends Fragment {
 
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
-// In the onCreate method
         final AutoCompleteTextView edt_profissao = (AutoCompleteTextView) activity.findViewById(R.id.edt_profissao);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line, PROFISSAO);
         edt_profissao.setAdapter(adapter);
@@ -108,17 +108,10 @@ public class FragmentPerfil extends Fragment {
         edt_sobre= (EditText) activity.findViewById(R.id.edt_sobre);
         edt_tel= (EditText) activity.findViewById(R.id.edt_tel);
         edt_email= (EditText) activity.findViewById(R.id.edt_email);
-        //edt_profissao= (EditText) activity.findViewById(R.id.edt_profissao);
         edt_endereco= (EditText) activity.findViewById(R.id.edt_endereco);
         edt_uf= (EditText) activity.findViewById(R.id.edt_uf);
         edt_cidade= (EditText) activity.findViewById(R.id.edt_cidade);
         edt_pais= (EditText) activity.findViewById(R.id.edt_pais);
-        //input_nome= (TextInputLayout) activity.findViewById(R.id.input_nome);
-        //input_email= (TextInputLayout) activity.findViewById(R.id.input_email);
-        //input_profissao= (TextInputLayout) activity.findViewById(R.id.input_profissao);
-        //input_tel= (TextInputLayout) activity.findViewById(R.id.input_tel);
-        //input_sobre= (TextInputLayout) activity.findViewById(R.id.input_sobre);
-        //geolocalizacao
         edt_latitude = (EditText) activity.findViewById(R.id.edt_latitude);
         edt_longitude = (EditText) activity.findViewById(R.id.edt_longitude);
         ImageView img_editar= (ImageView) activity.findViewById(R.id.img_editar);
@@ -126,56 +119,7 @@ public class FragmentPerfil extends Fragment {
         Button btn_salvar= (Button) activity.findViewById(R.id.btn_salvar);
         Button btn_localizacao= (Button) activity.findViewById(R.id.btn_localizacao);
 
-        //verificaGPS();//se verifica se gps esta ligado, senão sera ligado
         startGPS();//inici a captura das coordenadas
-
-        /*Button btn_atualiza= (Button) activity.findViewById(R.id.btn_teste);
-
-        btn_atualiza.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity, ChatActivity.class);
-                startActivity(i);
-            }
-        });
-*/
-        // Se não possui permissão
-     /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check "nunca mais mostre este alerta"
-                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
-                } else {
-                    // Solicita a permissão
-                    ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
-                }
-            } else {
-                //se tiver permissao para acessar e criar pastas
-            }
-
-
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.ACCESS_NETWORK_STATE)) {
-                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check "nunca mais mostre este alerta"
-                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
-                    Toast.makeText(activity, "OPS!! vc negou a permissao de acesso ao status da internet", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    i.addCategory(Intent.CATEGORY_DEFAULT);
-                    i.setData(Uri.parse("package:com.br.myprofission"));
-                    startActivity(i);
-                } else {
-                    // Solicita a permissão
-                    ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.ACCESS_NETWORK_STATE},0);
-                }
-            }
-        }*/
-
-
-
 
         final BDUsuario bd= new BDUsuario(activity);
         lista = bd.buscar();
@@ -223,37 +167,37 @@ public class FragmentPerfil extends Fragment {
             @Override
             public void onClick(View v) {
                 //if(submitForm()) {
-                    if(Utilitaria.Conectado(activity)) {
-                        BDUsuario b=new BDUsuario(activity);
-                        Double longi=0.0;
-                        Double lati=0.0;
-                        Usuario u = new Usuario();
-                        u.setNome(edt_nome.getText().toString());
-                        u.setSobre(edt_sobre.getText().toString());
-                        u.setProfissao(edt_profissao.getText().toString());
-                        u.setEmail(edt_email.getText().toString());
-                        u.setNumero(edt_tel.getText().toString());
-                        if(edt_longitude.getText().toString()!=null && !edt_longitude.getText().toString().isEmpty()) {
-                            longi = Double.parseDouble(edt_longitude.getText().toString());
-                            //Log.i("long",""+longi);
-                        }
-                        if(edt_latitude.getText().toString()!=null && !edt_latitude.getText().toString().isEmpty() ) {
-                            lati = Double.parseDouble(edt_latitude.getText().toString());
-                            //Log.i("lat",""+lati);
-                        }
-                        u.setLongitude(longi);
-                        u.setLatitude(lati);
-                        u.setCidade(edt_cidade.getText().toString());
-                        u.setUf(edt_uf.getText().toString());
-                        u.setPais(edt_pais.getText().toString());
-                        u.setLogradouro(edt_endereco.getText().toString());
-                        b.atualizar(u);
-                        b.editarServidor(activity, edt_nome.getText().toString(), edt_tel.getText().toString(), edt_email.getText().toString(), edt_sobre.getText().toString(),edt_profissao.getText().toString(),lati,longi,edt_endereco.getText().toString(),edt_cidade.getText().toString(),edt_uf.getText().toString(),edt_pais.getText().toString());
-                        b.fecharConexao();
-                    }else{
-                        Toast.makeText(activity, "Operação não pode ser realizada\nVocê não esta conectado a Internet", Toast.LENGTH_SHORT).show();
+                if(Utilitaria.Conectado(activity)) {
+                    BDUsuario b=new BDUsuario(activity);
+                    Double longi=0.0;
+                    Double lati=0.0;
+                    Usuario u = new Usuario();
+                    u.setNome(edt_nome.getText().toString());
+                    u.setSobre(edt_sobre.getText().toString());
+                    u.setProfissao(edt_profissao.getText().toString());
+                    u.setEmail(edt_email.getText().toString());
+                    u.setNumero(edt_tel.getText().toString());
+                    if(edt_longitude.getText().toString()!=null && !edt_longitude.getText().toString().isEmpty()) {
+                        longi = Double.parseDouble(edt_longitude.getText().toString());
+                        //Log.i("long",""+longi);
                     }
-               // }
+                    if(edt_latitude.getText().toString()!=null && !edt_latitude.getText().toString().isEmpty() ) {
+                        lati = Double.parseDouble(edt_latitude.getText().toString());
+                        //Log.i("lat",""+lati);
+                    }
+                    u.setLongitude(longi);
+                    u.setLatitude(lati);
+                    u.setCidade(edt_cidade.getText().toString());
+                    u.setUf(edt_uf.getText().toString());
+                    u.setPais(edt_pais.getText().toString());
+                    u.setLogradouro(edt_endereco.getText().toString());
+                    b.atualizar(u);
+                    b.editarServidor(activity, edt_nome.getText().toString(), edt_tel.getText().toString(), edt_email.getText().toString(), edt_sobre.getText().toString(),edt_profissao.getText().toString(),lati,longi,edt_endereco.getText().toString(),edt_cidade.getText().toString(),edt_uf.getText().toString(),edt_pais.getText().toString());
+                    b.fecharConexao();
+                }else{
+                    Toast.makeText(activity, "Operação não pode ser realizada\nVocê não esta conectado a Internet", Toast.LENGTH_SHORT).show();
+                }
+                // }
 
             }
         });
@@ -270,7 +214,6 @@ public class FragmentPerfil extends Fragment {
                 startActivity(i);
             }
         });
-
 
     }
     //Método que faz a leitura de fato dos valores recebidos do GPS

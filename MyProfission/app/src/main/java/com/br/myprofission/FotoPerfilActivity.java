@@ -88,6 +88,7 @@ public class FotoPerfilActivity extends AppCompatActivity {
 
     }
     public void salvarFoto(Bitmap foto){
+        foto=Utilitaria.getResizedBitmap(foto,300,270);//redimensiona a imagem
 
         String file_path = Environment.getExternalStorageDirectory() +
                 "/MyProfession/";
@@ -98,6 +99,7 @@ public class FotoPerfilActivity extends AppCompatActivity {
         //File file = new File(dir, "pensativo.jpg");
         FileOutputStream fOut;
         try {
+
             fOut = new FileOutputStream(file_path+ Utilitaria.retornaEmail(FotoPerfilActivity.this)+".png");
 
             foto.compress(Bitmap.CompressFormat.PNG, 100, fOut);
