@@ -1,8 +1,10 @@
 package com.br.myprofission.dao;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 
 import com.br.myprofission.LoginActivity;
 import com.br.myprofission.MainActivity;
+import com.br.myprofission.UsuarioActivity;
 import com.br.myprofission.adapter.UsuarioAdapter;
 import com.br.myprofission.util.Utilitaria;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -52,7 +55,7 @@ public class BDUsuario {
 
         List<Usuario> list = new ArrayList<Usuario>();
         String[] colunas = new String[] { "_id","nome", "profissao", "numero","email","sobre","latitude","longitude","cidade","pais","uf","logradouro"};
-       // String where = condicao ;
+        // String where = condicao ;
         Cursor cursor = bd.query("usuario", colunas,null, null, null, null,null);
         try {
             if (cursor.getCount() > 0) {
@@ -150,7 +153,7 @@ public class BDUsuario {
         return longi;
     }
     public void inserir(Usuario u) {
-		ContentValues valores = new ContentValues();
+        ContentValues valores = new ContentValues();
         valores.put("nome", u.getNome());
         valores.put("numero", u.getNumero());
         valores.put("profissao", u.getProfissao());
@@ -165,7 +168,7 @@ public class BDUsuario {
         bd.insert("usuario", null, valores);
 
 
-	}
+    }
 
     public void atualizar(Usuario u) {
         ContentValues valores = new ContentValues();
@@ -186,8 +189,8 @@ public class BDUsuario {
     }
 
     public void deletar(Usuario c) {
-		bd.delete("usuario", "_id = " + c.getId(), null);
-	}
+        bd.delete("usuario", "_id = " + c.getId(), null);
+    }
 
 
     public  void fecharConexao(){
@@ -196,9 +199,9 @@ public class BDUsuario {
 
 
     public void salvaServidor(final Context context,final String nome,final String tel,final String email,final String sobre,final String profissao,final String senha ){
-        pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+       pDialog = new ProgressDialog(context);
+       pDialog.setMessage("Loading...");
+       pDialog.show();
 
         String url="http://www.seriadosweb.biz/precciso/controller/controllerUsuario.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -212,8 +215,19 @@ public class BDUsuario {
                             Toast.makeText(context, "Operação falhou!", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            Utilitaria.gravaEmail(context,email);///salvar email sharepreference
                             //Utilitaria.sharedPrefernces(context,Utilitaria.removerEspacoVazio(response));
+                            BDUsuario bd = new BDUsuario(context);
+                            Usuario u= new Usuario();
+                            u.setNome(nome);
+                            u.setNumero(tel);
+                            u.setProfissao(profissao);
+                            u.setEmail(email);
+                            u.setSenha(senha);
+                            bd.inserir(u);
+                            Utilitaria.gravaEmail(context,email);///salvar email sharepreference
+
+                            Intent intent = new Intent(context, MainActivity.class);
+                            context.startActivity(intent);
                             Toast.makeText(context, "resposta =" + response.trim(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -221,8 +235,9 @@ public class BDUsuario {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "erro="+ error, Toast.LENGTH_LONG).show();
                         pDialog.dismiss();
+                        Toast.makeText(context, "erro="+ error, Toast.LENGTH_LONG).show();
+
                     }
                 }){
             @Override
@@ -308,7 +323,7 @@ public class BDUsuario {
                         } else {
 
                             //Utilitaria.sharedPrefernces(context,Utilitaria.removerEspacoVazio(response));
-                          //  Toast.makeText(context, "resposta =" + response.trim(), Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(context, "resposta =" + response.trim(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -466,78 +481,137 @@ public class BDUsuario {
 
     }
     public void conexoes(final Context context){
-       /* pDialog = new ProgressDialog(context);
+        /* pDialog = new ProgressDialog(context);
         pDialog.setMessage("Loading...");
         pDialog.show();
 */
         BD bd= new BD(context);
         List<Contato> list = bd.buscar();
 
-            for (int i = 0; i < bd.buscar().size(); i++) {
+        for (int i = 0; i < bd.buscar().size(); i++) {
 
-                String url = "http://www.seriadosweb.biz/precciso/controller/controllerUsuario.php?acao=conexoesUsuario&tel=" + list.get(i).getNumero();
-                Log.i("url", url);
-                //Log.i("telefone",url);
-                JsonArrayRequest jsonRequest = new JsonArrayRequest
-                        (url, new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                // pDialog.dismiss();
-                                try {
+            String url = "http://www.seriadosweb.biz/precciso/controller/controllerUsuario.php?acao=conexoesUsuario&tel=" + list.get(i).getNumero();
+            Log.i("url", url);
+            //Log.i("telefone",url);
+            JsonArrayRequest jsonRequest = new JsonArrayRequest
+                    (url, new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            // pDialog.dismiss();
+                            try {
 
-                                    //output.setText(response.toString());
-                                    //Toast.makeText(MainActivity.this, "tam="+response.length(), Toast.LENGTH_SHORT).show();
-                                    //Log.i("rsponse",response.toString());
-                                    if (response.length() > 0) {
-                                        for (int i = 0; i < response.length(); i++) {
-                                            //  Toast.makeText(ListActivity.this, "i="+i, Toast.LENGTH_SHORT).show();
-                                            JSONObject obj = response.getJSONObject(i);
+                                //output.setText(response.toString());
+                                //Toast.makeText(MainActivity.this, "tam="+response.length(), Toast.LENGTH_SHORT).show();
+                                //Log.i("rsponse",response.toString());
+                                if (response.length() > 0) {
+                                    for (int i = 0; i < response.length(); i++) {
+                                        //  Toast.makeText(ListActivity.this, "i="+i, Toast.LENGTH_SHORT).show();
+                                        JSONObject obj = response.getJSONObject(i);
 
-                                            ContatoConexoes c = new ContatoConexoes();
+                                        ContatoConexoes c = new ContatoConexoes();
                                         /*Log.i("nome",obj.getString("nome"));
                                         Log.i("email",obj.getString("email"));
                                         Log.i("tel",obj.getString("tel"));
                                         Log.i("desc",obj.getString("descricao"));
                                         Log.i("prof",obj.getString("profissao"));
                                         Log.i("foto",obj.getString("foto"));*/
-                                            c.setNome(obj.getString("nome"));
-                                            c.setEmail(obj.getString("email"));
-                                            c.setNumero(obj.getString("tel"));
-                                            c.setSobre(obj.getString("descricao"));
-                                            c.setProfissao(obj.getString("profissao"));
-                                            c.setFoto(obj.getString("foto"));
+                                        c.setNome(obj.getString("nome"));
+                                        c.setEmail(obj.getString("email"));
+                                        c.setNumero(obj.getString("tel"));
+                                        c.setSobre(obj.getString("descricao"));
+                                        c.setProfissao(obj.getString("profissao"));
+                                        c.setFoto(obj.getString("foto"));
 
-                                            BDConexoesContatos bd = new BDConexoesContatos(context);
-                                            if (bd.buscarEmail(obj.getString("email")) == false) {//verifica se ja fois cadastro esse email se foi ele não sera mais inserido...
-                                                bd.inserir(c);
-                                            } else {
-                                                bd.atualizar(c);
-                                            }
-
+                                        BDConexoesContatos bd = new BDConexoesContatos(context);
+                                        if (bd.buscarEmail(obj.getString("email")) == false) {//verifica se ja fois cadastro esse email se foi ele não sera mais inserido...
+                                            bd.inserir(c);
+                                        } else {
+                                            bd.atualizar(c);
                                         }
-                                    } else {
-                                        //Toast.makeText(MainActivity.this, "Nenhum resultado encontrado", Toast.LENGTH_LONG).show();
+
                                     }
-
-                                } catch (JSONException e) {
-
-                                    e.printStackTrace();
-
+                                } else {
+                                    //Toast.makeText(MainActivity.this, "Nenhum resultado encontrado", Toast.LENGTH_LONG).show();
                                 }
 
-                            }
-                        }, new Response.ErrorListener() {
+                            } catch (JSONException e) {
 
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // pDialog.dismiss();
-                                error.printStackTrace();
-                            }
-                        });
+                                e.printStackTrace();
 
-                Volley.newRequestQueue(context).add(jsonRequest);
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // pDialog.dismiss();
+                            error.printStackTrace();
+                        }
+                    });
+            Volley.newRequestQueue(context).add(jsonRequest);
+        }
+        //  bd.fecharConexao();
+    }
+    public void verificaEmailExiste(final Context context,final String email){//verifica se email ja existe
+        pDialog = new ProgressDialog(context);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        String url="http://www.seriadosweb.biz/precciso/controller/controllerUsuario.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pDialog.dismiss();
+                        if(response.trim().equals("sim")) {
+                          //  Toast.makeText(context, "Operação falhou!", Toast.LENGTH_SHORT).show();
+                            AlertDialog alerta;
+                            //Cria o gerador do AlertDialog
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            //define o titulo
+                            builder.setTitle("Atenção");
+                            //define a mensagem
+                            builder.setMessage("Email ja esta sendo utilizado\n Por favor! digite outro email, ou caso seja o dono deste email clique em: 'ja cadastrado?'" );
+                            //define um botão como positivo
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    Intent i= new Intent(context, UsuarioActivity.class);
+                                    context.startActivity(i);
+
+                                }
+                            });
+
+                            //cria o AlertDialog
+                            alerta = builder.create();
+                            //Exibe
+                            alerta.show();
+                        }
+
+                        //.makeText(context, "resposta email =" + response.trim(), Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        pDialog.dismiss();
+                        Toast.makeText(context, "Houve 1 erro!\nTente novamente"+ error, Toast.LENGTH_LONG).show();
+
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("acao","verificaEmailExiste");//vai para metodo q verifica se o usuario ja possui registro e ja tem creditos criados , assim em vez de cria uma nova tupla ele apenas atualiza a existente
+                params.put("email",email);
+
+                return params;
             }
-      //  bd.fecharConexao();
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
 
     }
 }

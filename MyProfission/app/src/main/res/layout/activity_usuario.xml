@@ -106,14 +106,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txtmsg"
         >
-        <EditText
+       <!-- <EditText
             android:id="@+id/edt_profissao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Sua profissão"
             android:layout_below="@id/input_profissao"
             android:visibility="gone"
-            />
+            />-->
+        <AutoCompleteTextView
+            android:id="@+id/edt_profissao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="profissao"
+            android:layout_below="@id/input_profissao"
+            android:visibility="gone"/>
+
     </android.support.design.widget.TextInputLayout>
 
     <Button

@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.br.myprofission.dao.BDUsuario;
+import com.br.myprofission.util.Utilitaria;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText edt_email;
@@ -32,8 +34,13 @@ public class LoginActivity extends AppCompatActivity {
         btn_logar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BDUsuario bd = new BDUsuario(LoginActivity.this);
-                bd.login(LoginActivity.this,edt_email.getText().toString(),edt_senha.getText().toString());
+                if (Utilitaria.Conectado(LoginActivity.this)) {
+                    BDUsuario bd = new BDUsuario(LoginActivity.this);
+                    bd.login(LoginActivity.this, edt_email.getText().toString(), edt_senha.getText().toString());
+
+                } else {
+                    Toast.makeText(LoginActivity.this, "Sem conexão com internet", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

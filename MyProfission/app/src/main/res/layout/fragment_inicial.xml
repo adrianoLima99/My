@@ -25,9 +25,10 @@
                 />-->
             <AutoCompleteTextView
                 android:id="@+id/precisa"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:hint="Do que precisa?"/>
+                android:layout_width="280dp"
+                android:layout_height="43dp"
+                android:hint="Do que precisa?"
+                />
 
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
@@ -47,17 +48,19 @@
             android:divider="@color/list_divider"
             android:dividerHeight="1dp"
             android:listSelector="@drawable/list_row_selector"
+            android:paddingTop="2dp"
             >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
     <ImageButton
         android:id="@+id/btn_encontrar"
-        android:layout_width="80dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:src="@mipmap/busca"
         android:background="@color/colorBotao"
         android:layout_alignBottom="@+id/ll_busca"
         android:layout_toRightOf="@+id/ll_busca"
         android:layout_toEndOf="@+id/ll_busca"
-        android:padding="3dp"/>
+        android:padding="3dp"
+        android:layout_marginLeft="2dp"/>
 </RelativeLayout>

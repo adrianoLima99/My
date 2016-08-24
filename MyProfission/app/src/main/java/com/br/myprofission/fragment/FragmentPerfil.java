@@ -126,14 +126,13 @@ public class FragmentPerfil extends Fragment {
 
         for(int i=0;i<lista.size();i++) {//for para preencgimnto dos campos do formulario
             String caminho = Environment.getExternalStorageDirectory() +
-                    "/MyProfession/"+Utilitaria.retornaEmail(getContext())+".png";
+                        "/MyProfession/" + Utilitaria.retornaEmail(getContext()) + ".png";
 
-            if(!Utilitaria.diretorioVazio(caminho)){
-                ///seta a foto perfil salva no direotio
-                final Bitmap bitmap1 = BitmapFactory.decodeFile(caminho);
-                img_perfil.setImageBitmap(bitmap1);
+            if (!Utilitaria.diretorioVazio(caminho)) {
+                    ///seta a foto perfil salva no direotio
+                 final Bitmap bitmap1 = BitmapFactory.decodeFile(caminho);
+                 img_perfil.setImageBitmap(bitmap1);
             }
-
             edt_nome.setText(lista.get(i).getNome());
             edt_sobre.setText(lista.get(i).getSobre());
             edt_tel.setText(lista.get(i).getNumero());

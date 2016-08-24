@@ -145,6 +145,37 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
                 }
             }
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check "nunca mais mostre este alerta"
+                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
+                    Toast.makeText(this, "OPS!! vc negou a permissao de acesso ao status da internet", Toast.LENGTH_SHORT).show();
+                    /*Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.setData(Uri.parse("package:com.br.myprofission"));
+                    startActivity(i);*/
+                } else {
+                    // Solicita a permissão
+                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+                }
+            }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // Verifica se já mostramos o alerta e o usuário negou na 1ª vez.
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check "nunca mais mostre este alerta"
+                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
+                    Toast.makeText(this, "OPS!! vc negou a permissao de acesso ao status da internet", Toast.LENGTH_SHORT).show();
+                    /*Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.setData(Uri.parse("package:com.br.myprofission"));
+                    startActivity(i);*/
+                } else {
+                    // Solicita a permissão
+                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+                }
+            }
+
 
         }
 

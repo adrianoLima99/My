@@ -71,9 +71,9 @@ public class FotoPerfilActivity extends AppCompatActivity {
 
                 cursor.close();
 
-                final Bitmap bitmap1 = BitmapFactory.decodeFile(pathing);
-                img_perfil.setImageBitmap(bitmap1);
-                salvarFoto(bitmap1);
+                final Bitmap bitmap = BitmapFactory.decodeFile(pathing);
+                img_perfil.setImageBitmap(bitmap);
+                salvarFoto(bitmap);
             }
         }
 

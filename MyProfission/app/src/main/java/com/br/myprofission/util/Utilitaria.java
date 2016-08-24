@@ -62,7 +62,7 @@ public class Utilitaria {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Detalhes");
+        //builder.setTitle("Detalhes");
         builder.setView(view);
         alerta = builder.create();
         alerta.show();
@@ -276,4 +276,8 @@ public class Utilitaria {
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
+
+
+
+
 }
