@@ -3,26 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:padding="5dp"
-        android:orientation="vertical">
+       >
        <FrameLayout
            android:id="@+id/frl_image"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_marginTop="110dp"
-           android:layout_gravity="center_horizontal">
+           android:layout_centerHorizontal="true">
         <com.github.siyamed.shapeimageview.CircularImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:src="@mipmap/usuario"
             app:siBorderWidth="6dp"
             app:siBorderColor="#FFF"
-            android:id="@+id/img_perfil"
-            android:layout_gravity="center"/>
+            android:id="@+id/img_perfil" />
         <ImageView
             android:id="@+id/img_editar"
             android:layout_width="wrap_content"
@@ -36,6 +35,7 @@
             android:id="@+id/input_nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/frl_image"
             >
             <EditText
                 android:id="@+id/edt_nome"
@@ -48,6 +48,7 @@
             android:id="@+id/input_tel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_nome"
             >
             <EditText
                 android:id="@+id/edt_tel"
@@ -61,6 +62,7 @@
             android:id="@+id/input_profissao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_tel"
             >
 
            <!-- <EditText
@@ -80,6 +82,7 @@
             android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_profissao"
             >
             <EditText
                 android:id="@+id/edt_email"
@@ -93,6 +96,7 @@
             android:id="@+id/input_sobre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_email"
             >
             <EditText
                 android:id="@+id/edt_sobre"
@@ -105,19 +109,20 @@
             android:id="@+id/txt_geolocalizacao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Geolocalização(Ative seu gps para que possamos saber sua localização)"/>
+            android:text="Geolocalização(Ative seu gps para que possamos saber sua localização)"
+            android:layout_below="@id/input_sobre"/>
 
         <EditText
             android:id="@+id/edt_latitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <EditText
             android:id="@+id/edt_longitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
         <Button
             android:id="@+id/btn_localizacao"
             android:layout_width="match_parent"
@@ -128,11 +133,13 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:padding="3dp"
+            android:layout_below="@id/txt_geolocalizacao"
             />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_endereco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/btn_localizacao"
             >
             <EditText
                 android:id="@+id/edt_endereco"
@@ -144,6 +151,7 @@
             android:id="@+id/input_cidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_endereco"
             >
             <EditText
                 android:id="@+id/edt_cidade"
@@ -155,6 +163,7 @@
             android:id="@+id/input_uf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_cidade"
             >
             <EditText
                 android:id="@+id/edt_uf"
@@ -166,6 +175,7 @@
             android:id="@+id/input_pais"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/input_uf"
             >
             <EditText
                 android:id="@+id/edt_pais"
@@ -183,6 +193,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:padding="3dp"
+            android:layout_below="@id/input_pais"
             />
         <!--<Button
             android:id="@+id/btn_teste"
@@ -197,5 +208,5 @@
             />
 -->
 
-    </LinearLayout>
+    </RelativeLayout>
 </ScrollView>
